@@ -19,17 +19,20 @@ if [[ -z "$imageName" ]]; then
     exit 1
 elif [[ -e $imageName ]]; then
     echo "A file with this name already exists." >&2
-    exit 0
+    exit 1
 elif [[ "$imageName" =~ [\0/] ]]; then
     echo "Invalid input: Invalid characters." >&2
+    exit 1
 elif [[ ${#imageName} -gt 255 ]]; then
     echo "Invalid input: Name exceeds 255 characters." >&2
+    exit 1
 else
     echo "Filename: $imageName"
 fi
 
 echo "Ready to begin downloading..."
 
+downloadedFile="downloadedFile"
 wget -q $webImage -O downloadedFile
 if [[ $? -ne 0 ]]; then
     echo "Download failed." >&2
@@ -38,12 +41,13 @@ fi
 
 echo "File downloaded. Scanning image..."
 
-virusResult=$(clamscan --no-summary -i $downloadedFile)
-if [[ -n $virusResult ]]; then
-echo "File has no virus. Checking image type..."
+clamscan --no-summary -i "$downloadedFile"
+virusResult=$?
+if [[ $virusResult -eq 0 ]]; then
+    echo "File has no virus. Checking image type..."
 else
-echo "Virus detected. Exiting program."
-exit 1,
+    echo "Virus detected detected or unable to complete scan. Exiting program." >&2
+    exit 1
 fi
 
 exit 0
