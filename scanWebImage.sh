@@ -50,4 +50,17 @@ else
     exit 1
 fi
 
+originalFileName=$(echo "$webImage" | rev | cut -d "/" -f 1 | rev)
+ext=$(echo "$originalFileName" | rev | cut -d "." -f 1 | rev)
+if [[ $ext == "jpg" || $ext == "jpeg" ]]; then 
+    cp "$downloadedFile" fileToName.jpg
+    echo "No conversion necessary. File already JPG."
+else
+    echo "Converting file to jpg..."
+    convert "$downloadedFile" fileToName.jpg
+    echo "Conversion complete."
+fi
+
+echo "Grabbing resolution..."
+
 exit 0
