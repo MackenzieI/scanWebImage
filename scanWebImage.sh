@@ -63,4 +63,25 @@ fi
 
 echo "Grabbing resolution..."
 
+resolution=$(file fileToName.jpg | grep -Eo '[0-9]{3,5}(\s|)x(\s|)[0-9]{3,5}' | sed 's/\s//g')
+
+if [[ -z "$resolution" ]]; then
+    echo "Could not find resolution." >&2
+    rm -f "$downloadedFile" "$fileToName.jpg"
+    exit 1
+fi
+
+echo "Grabbing resolution complete. Resolution: $resolution"
+
+echo "Naming file..."
+
+fileName="${imageName}_${resolution}.jpg"
+
+echo "Changing filename to $fileName"
+
+mv "$fileToName" "$fileName"
+rm -f "$downloadedFile"
+
+echo "Renaming complete. Save as: $fileName."
+
 exit 0
