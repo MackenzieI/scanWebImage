@@ -36,6 +36,7 @@ fi
 echo "Ready to begin downloading..."
 
 downloadedFile="downloadedFile"
+# Print an error if the file didn't download. 
 wget -q $webImage -O downloadedFile
 if [[ $? -ne 0 ]]; then
     echo "Download failed." >&2
@@ -46,6 +47,8 @@ echo "File downloaded. Scanning image..."
 
 clamscan --no-summary -i "$downloadedFile"
 virusResult=$?
+# If virusResult is 0, clamscan (Clam AV) found no virus. 
+# Send an error if it is not 0.
 if [[ $virusResult -eq 0 ]]; then
     echo "File has no virus. Checking image type..."
 else
@@ -53,6 +56,7 @@ else
     exit 1
 fi
 
+# Convert to jpg if necessary.
 originalFileName=$(echo "$webImage" | rev | cut -d "/" -f 1 | rev)
 ext=$(echo "$originalFileName" | rev | cut -d "." -f 1 | rev)
 if [[ $ext == "jpg" || $ext == "jpeg" ]]; then 
@@ -67,7 +71,8 @@ fi
 echo "Grabbing resolution..."
 
 resolution=$(file fileToName.jpg | grep -Eo '[0-9]{3,5}(\s|)x(\s|)[0-9]{3,5}' | sed 's/\s//g')
-
+# Send an error if resolution couldn't be found. 
+# Remove unneeded files.
 if [[ -z "$resolution" ]]; then
     echo "Could not find resolution." >&2
     rm -f "$downloadedFile" "$fileToName.jpg"
@@ -82,7 +87,7 @@ fileName="${imageName}_${resolution}.jpg"
 
 echo "Changing filename to $fileName"
 
-mv "$fileToName" "$fileName"
+mv "$fileToName" "$fileName" # Change name
 rm -f "$downloadedFile"
 
 echo "Renaming complete. Save as: $fileName."
