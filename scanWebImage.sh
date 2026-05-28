@@ -2,6 +2,8 @@
 
 echo -n "Please enter a direct URL to an image file: "
 read webImage
+# CHecks that the URL links to a valid image type. 
+# Sends an error if left empty or not a valid image type.
 if [[ -z "$webImage" ]]; then
     echo "Invalid input: Empty." >&2
     exit 1
@@ -14,6 +16,7 @@ fi
 
 echo -n "Please enter the name you would like to save this file as: "
 read imageName
+# Checks that the name isn't empty, already exists, invalid, or too long.
 if [[ -z "$imageName" ]]; then
     echo "Invalid input: Empty." >&2
     exit 1
