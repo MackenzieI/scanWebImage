@@ -4,6 +4,8 @@ This code was made as a part of Ivy Tech's Linux and Virtualization course.
 
 This is a shell script designed for Linux systems to scan images for viruses or malware and save the image for wallpaper images.
 
+This script was developed on a VM running Kubuntu 24.04.
+
 # Dependencies
 
 ClamAV is required for this script to work. 
